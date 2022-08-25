@@ -23,7 +23,7 @@ void DrawCircle(float ori_x, float ori_y, float radius)
         float angle = 2.0f * 3.141592654f * i / resolution;
         float x = cos(angle) * radius;
         float y = sin(angle) * radius;
-        glVertex2d(ori_x + x, ori_y + y);
+        glVertex2f(ori_x + x, ori_y + y);
     }
     glEnd();
 }
