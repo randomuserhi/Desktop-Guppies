@@ -13,10 +13,69 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Deep">
+      <UniqueIdentifier>{d84dae11-d496-4d61-a0f6-be2fca315365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Deep\Debug">
+      <UniqueIdentifier>{dfe6fced-2901-445e-a4f3-eb6c5403ad3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Deep">
+      <UniqueIdentifier>{aa43b436-b9f6-4115-84c6-573b11439141}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Deep\Debug">
+      <UniqueIdentifier>{85689752-8309-4b5e-9a01-8f7ddfbee412}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Hook">
+      <UniqueIdentifier>{2cf63a9b-10b9-4200-aae7-80b08d77e72c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Hook">
+      <UniqueIdentifier>{89ed298f-4e15-4c85-adbf-6228bd5ede41}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Guppies.cpp">
+    <ClCompile Include="guppies.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Deep_Debug_Memory.cpp">
+      <Filter>Source Files\Deep\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="hook.cpp">
+      <Filter>Source Files\Hook</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Debug_Memory.h">
+      <Filter>Header Files\Deep\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Debug_Memory_Def.h">
+      <Filter>Header Files\Deep\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Debug_Memory_Undef.h">
+      <Filter>Header Files\Deep\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Debug.h">
+      <Filter>Header Files\Deep\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep.h">
+      <Filter>Header Files\Deep</Filter>
+    </ClInclude>
+    <ClInclude Include="Deep_Modules.h">
+      <Filter>Header Files\Deep</Filter>
+    </ClInclude>
+    <ClInclude Include="hook.h">
+      <Filter>Header Files\Hook</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

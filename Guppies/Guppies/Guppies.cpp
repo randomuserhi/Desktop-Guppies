@@ -1,32 +1,18 @@
-#include <iostream>
 #include <chrono>
-//#include <Eigen/Dense>
 
 #include <Windows.h>
+#include <dwmapi.h>
 
 #include <gl/GL.h>
 #include <gl/GLU.h>
 
-#include <dwmapi.h>
+#include "Deep.h"
 
-int w = 1920;
-int h = 1080;
+#include "hook.h"
+#include "main.h"
+#include "renderer.h"
 
-int x = 0;
-int y = 0;
-
-void DrawCircle(float ori_x, float ori_y, float radius)
-{
-    glBegin(GL_POLYGON);
-    int resolution = 20;
-    for (int i = 0; i <= resolution; i++) {
-        float angle = 2.0f * 3.141592654f * i / resolution;
-        float x = cos(angle) * radius;
-        float y = sin(angle) * radius;
-        glVertex2f(ori_x + x, ori_y + y);
-    }
-    glEnd();
-}
+#include <WinUser.h>
 
 HGLRC m_hrc;
 
@@ -52,36 +38,6 @@ void resizeSC(int width, int height) {
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-}
-
-BOOL Render() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-
-    /*glBegin(GL_TRIANGLES);                              // Drawing Using Triangles
-    glColor4f(1.0f, 0.0f, 0.0f, 0.5f);                      // Set The Color To Red
-    glVertex3f(0.0f, 1.0f, 0.0f);                  // Top
-    glColor3f(0.0f, 1.0f, 0.0f);                      // Set The Color To Green
-    glVertex3f(-1.0f, -1.0f, 0.0f);                  // Bottom Left
-    glColor3f(0.0f, 0.0f, 1.0f);                      // Set The Color To Blue
-    glVertex3f(1.0f, -1.0f, 0.0f);                  // Bottom Right
-    glEnd();*/
-
-    glLoadIdentity();                           // Reset The Projection Matrix
-    glViewport(0, 0, (GLsizei)w, (GLsizei)h);
-    glOrtho(0, w, 0, h, -1, 1);                      // Set Up An Ortho Screen
-
-    glTranslated(0, 0, 0);
-    glScaled(1, 1, 0); // Scales from bottom left *bruh*
-
-    DrawCircle(++x / 2.0f, ++y / 2.0f, 10);
-
-    glPopMatrix();
-    glFlush();
-
-    return 0;
 }
 
 BOOL CreateHGLRC(HWND hWnd) {
@@ -128,7 +84,6 @@ BOOL CreateHGLRC(HWND hWnd) {
     return TRUE;
 }
 
-
 int running = 1;
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
@@ -158,84 +113,107 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 
 int main()
 {
-    //HWND hWnd = GetConsoleWindow();
-    //ShowWindow(hWnd, SW_MINIMIZE);
-    //ShowWindow(hWnd, SW_HIDE);
+    /*Hook*/
+    //StartHook();
 
-    const char* windowClassName = "Window in Console";
-    WNDCLASS windowClass = { 0 };
-    windowClass.hbrBackground = (HBRUSH)CreateSolidBrush(0x00000000);
-    windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-    windowClass.hInstance = NULL;
-    windowClass.lpfnWndProc = WndProc;
-    windowClass.lpszClassName = windowClassName;
-    windowClass.style = CS_HREDRAW | CS_VREDRAW;
-    if (!RegisterClass(&windowClass))
-        MessageBox(NULL, "Could not register class", "Error", MB_OK);
+    mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE, 65535, 0, 0, 0);
+    mouse_event(MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE, 65535, 0, 0, 0);
 
-    w = GetSystemMetrics(SM_CXSCREEN);
-    h = GetSystemMetrics(SM_CYSCREEN);
+    /*Hide terminal*/
+    HWND hWnd = GetConsoleWindow();
+    ShowWindow(hWnd, SW_HIDE);
 
-    HWND windowHandle = CreateWindowEx(
-        WS_EX_COMPOSITED | WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOPMOST,
-        windowClassName,
-        NULL,
-        WS_POPUP, //borderless
-        0, //x coordinate of window start point
-        0, //y start point
-        w, //width of window; this function
-        h, //height of the window
-        NULL, //handles and such, not needed
-        NULL,
-        NULL,
-        NULL);
-    ShowWindow(windowHandle, SW_MAXIMIZE);
-    SetLayeredWindowAttributes(windowHandle, 0, 255, LWA_ALPHA);
-
-    DWM_BLURBEHIND bb = { 0 };
-    HRGN hRgn = CreateRectRgn(0, 0, -1, -1);
-    bb.dwFlags = DWM_BB_ENABLE | DWM_BB_BLURREGION;
-    bb.hRgnBlur = hRgn;
-    bb.fEnable = TRUE;
-    DwmEnableBlurBehindWindow(windowHandle, &bb);
-
-    SetLayeredWindowAttributes(windowHandle, 0, 255, LWA_ALPHA);
-
-    CreateHGLRC(windowHandle);
-
-    HDC hdc = GetDC(windowHandle);
-    wglMakeCurrent(hdc, m_hrc);
-    initSC();
-    resizeSC(w, h);
-
-    MSG messages;
-
-    //Init();
-
-    auto prev = std::chrono::high_resolution_clock::now();
-
-    while (running)
+    while (true)
     {
-        if (PeekMessage(&messages, NULL, 0, 0, PM_REMOVE))
-        {
-            TranslateMessage(&messages);
-            DispatchMessage(&messages);
-        }
-        else
-        {
-            /*auto now = std::chrono::high_resolution_clock::now();
-            float dt = std::chrono::duration<float, std::milli>(now - prev).count() / 1000.0f;
-            prev = now;*/
+        running = 1;
 
-            //std::cout << dt << std::endl;
-            //Update(1.0f / freq);
-            Render();
-            SwapBuffers(hdc);
+        const char* windowClassName = "Window in Console";
+        WNDCLASS windowClass = { 0 };
+        windowClass.hbrBackground = (HBRUSH)CreateSolidBrush(0x00000000);
+        windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+        windowClass.hInstance = NULL;
+        windowClass.lpfnWndProc = WndProc;
+        windowClass.lpszClassName = windowClassName;
+        windowClass.style = CS_HREDRAW | CS_VREDRAW;
+        if (!RegisterClass(&windowClass))
+            MessageBox(NULL, "Could not register class", "Error", MB_OK);
+
+        w = GetSystemMetrics(SM_CXSCREEN);
+        h = GetSystemMetrics(SM_CYSCREEN);
+
+        HWND windowHandle = CreateWindowEx(
+            WS_EX_COMPOSITED | WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOPMOST | WS_EX_TOOLWINDOW,
+            windowClassName,
+            NULL,
+            WS_POPUP, //borderless
+            0, //x coordinate of window start point
+            0, //y start point
+            w, //width of window; this function
+            h, //height of the window
+            NULL, //handles and such, not needed
+            NULL,
+            NULL,
+            NULL);
+        ShowWindow(windowHandle, SW_MAXIMIZE);
+        SetLayeredWindowAttributes(windowHandle, 0, 255, LWA_ALPHA);
+
+        DWM_BLURBEHIND bb = { 0 };
+        HRGN hRgn = CreateRectRgn(0, 0, -1, -1);
+        bb.dwFlags = DWM_BB_ENABLE | DWM_BB_BLURREGION;
+        bb.hRgnBlur = hRgn;
+        bb.fEnable = TRUE;
+        DwmEnableBlurBehindWindow(windowHandle, &bb);
+
+        SetLayeredWindowAttributes(windowHandle, 0, 255, LWA_ALPHA);
+
+        CreateHGLRC(windowHandle);
+
+        HDC hdc = GetDC(windowHandle);
+        wglMakeCurrent(hdc, m_hrc);
+        initSC();
+        resizeSC(w, h);
+
+        MSG messages;
+
+        Init();
+
+        auto prev = std::chrono::high_resolution_clock::now();
+
+        //Deep::StartMemoryDebug();
+
+        while (running)
+        {
+#include "Deep_Debug_Memory_Undef.h"
+            if (PeekMessage(&messages, NULL, 0, 0, PM_REMOVE))
+            {
+                TranslateMessage(&messages);
+                DispatchMessage(&messages);
+            }
+#include "Deep_Debug_Memory_Def.h"
+            else
+            {
+                auto now = std::chrono::high_resolution_clock::now();
+                float dt = std::chrono::duration<float, std::milli>(now - prev).count() / 1000.0f;
+                prev = now;
+
+                //std::cout << dt << "ms" << std::endl;
+                Update(dt);
+                Render();
+
+                SwapBuffers(hdc);
+
+                Sleep(10);
+            }
         }
+
+        //Deep::PrintAllocationMap();
+        //Deep::EndMemoryDebug();
+
+        ReleaseDC(windowHandle, hdc);
+        DeleteObject(windowHandle); //doing it just in case
+
+        while (IsWindow(windowHandle)) {}
     }
 
-    ReleaseDC(windowHandle, hdc);
-    DeleteObject(windowHandle); //doing it just in case
-
-    return messages.wParam;
+    return 1;
 }
