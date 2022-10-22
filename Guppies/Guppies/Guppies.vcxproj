@@ -166,7 +166,6 @@
   <ItemGroup>
     <ClCompile Include="Deep_Debug_Memory.cpp" />
     <ClCompile Include="guppies.cpp" />
-    <ClCompile Include="hook.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="renderer.cpp" />
   </ItemGroup>
@@ -177,7 +176,6 @@
     <ClInclude Include="Deep_Debug_Memory_Def.h" />
     <ClInclude Include="Deep_Debug_Memory_Undef.h" />
     <ClInclude Include="Deep_Modules.h" />
-    <ClInclude Include="hook.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="renderer.h" />
   </ItemGroup>

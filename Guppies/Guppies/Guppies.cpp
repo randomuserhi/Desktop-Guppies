@@ -8,7 +8,6 @@
 
 #include "Deep.h"
 
-#include "hook.h"
 #include "main.h"
 #include "renderer.h"
 
@@ -113,9 +112,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
 
 int main()
 {
-    /*Hook*/
-    //StartHook();
-
     mouse_event(MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_ABSOLUTE, 65535, 0, 0, 0);
     mouse_event(MOUSEEVENTF_LEFTUP | MOUSEEVENTF_ABSOLUTE, 65535, 0, 0, 0);
 
